@@ -153,6 +153,13 @@ function part3() {
   echo -e "STEP 8 - Setting cron tasks ...\n\n"
 
   if [ $GLPI_ENABLE_CRONJOB ]; then
+
+    if echo "$GLPI_VERSION" | grep -q '9.4.*'; then
+      TASK_UNLOCK_CRON="*/15 * * * * apache /usr/bin/php ${FOLDER_GLPI_BIN}/console task:unlock --all"
+    else
+      TASK_UNLOCK_CRON="*/15 * * * * apache /usr/bin/php ${FOLDER_GLPI_SCRIPTS}/unlock_tasks.php"
+    fi
+
     echo -e "
     # Add scheduled task by cron and enable
     */2 * * * * apache /usr/bin/php ${FOLDER_GLPI}/front/cron.php &>/dev/null
@@ -161,7 +168,7 @@ function part3() {
     00 22 * * * apache /usr/bin/php -q -f ${FOLDER_GLPI_SCRIPTS}/ldap_mass_sync.php action=2
      
     # Unlock automatic actions blocked in GLPI – Each 15min
-    */15 * * * * apache /usr/bin/php ${FOLDER_GLPI_SCRIPTS}/unlock_tasks.php
+    ${TASK_UNLOCK_CRON}
      
     # Aplication and Database backup - TODO
     #0 23 * * * sh /backup/backup_glpi.sh
