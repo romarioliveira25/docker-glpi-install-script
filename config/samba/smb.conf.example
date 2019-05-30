@@ -1,0 +1,35 @@
+[global]
+    workgroup = DOMAINNAME
+    security = ADS
+    realm = DOMAINNAME
+    add machine script = /usr/sbin/useradd  -c Machine -d /var/lib/nobody -s /bin/false %m$
+    #auth methods = winbind
+    domain logons = No
+    domain master = No
+    ldap ssl = No
+    load printers = No
+    printcap name = /dev/null
+    log file = /var/log/samba/log.%m
+    max log size = 50
+    netbios name = srv-glpi
+    server string = srv-glpi
+    password server = DOMAINNAME
+    wins server = DOMAINNAME
+    winbind cache time = 60
+    winbind enum groups = Yes
+    winbind enum users = Yes
+    winbind use default domain = Yes
+    wins support = No
+    template homedir = /home/%D/%U
+    usershare allow guests = No
+    winbind refresh tickets = yes
+
+    name resolve order = wins lmhosts bcast host
+    winbind separator = /
+    client use spnego = yes
+    ntlm auth = yes
+    client ntlmv2 auth = yes
+    idmap gid = 10000-20000
+    idmap uid = 10000-20000
+    template shell = /bin/sh
+    winbind offline logon = yes

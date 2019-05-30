@@ -1,0 +1,85 @@
+ServerName localhost
+
+# Redirect configuration for multi-glpi installation
+# You can set this value in each vhost configuration
+#SetEnv GLPI_CONFIG_DIR /etc/glpi
+
+<Directory /var/www/html/glpi>
+    Options None
+    AllowOverride Limit Options FileInfo
+
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Allow from all
+    </IfModule>
+
+    AuthType NTLM
+    AuthName "GLPI"
+    NTLMAuth on
+    NTLMBasicAuth on
+    NTLMBasicRealm domain.local
+    NTLMAuthHelper "/usr/bin/ntlm_auth --helper-protocol=squid-2.5-ntlmssp"
+    NTLMBasicAuthoritative off
+    require valid-user
+</Directory>
+
+<Directory /var/www/html/glpi/install>
+
+    # Install is only allowed via local access (from the GLPI server).
+    # Add your IP address if you need it for remote installation,
+    # but remember to remove it after installation for security.
+
+    <IfModule mod_authz_core.c>
+        # Apache 2.4
+        Require local
+        # Require ip ##.##.##.##
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        # Apache 2.2
+        Order Deny,Allow
+        Deny from All
+        Allow from 127.0.0.1
+        Allow from ::1
+    </IfModule>
+
+    ErrorDocument 403 "<p><b>Restricted area.</b><br />Only local access allowed.<br />Check your configuration or contact your administrator.</p>"
+
+    <IfModule mod_php5.c>
+        # migration could be very long
+        php_value max_execution_time 0
+        php_value memory_limit -1
+    </IfModule>
+    <IfModule mod_php7.c>
+        # migration could be very long
+        php_value max_execution_time 0
+        php_value memory_limit -1
+    </IfModule>
+</Directory>
+
+#<Directory /var/www/html/glpi/config>
+#    Order Allow,Deny
+#    Deny from all
+#</Directory>
+
+<Directory /var/www/html/glpi/locales>
+    Order Allow,Deny
+    Deny from all
+</Directory>
+
+<Directory /var/www/html/glpi/install/mysql>
+    Order Allow,Deny
+    Deny from all
+</Directory>
+
+<Directory /var/www/html/glpi/scripts>
+    Order Allow,Deny
+    Deny from all
+</Directory>
+
+# some people prefer a simple URL like http://glpi.example.com
+<VirtualHost *:80>
+  DocumentRoot /var/www/html/glpi
+</VirtualHost>
