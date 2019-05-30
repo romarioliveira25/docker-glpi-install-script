@@ -1,0 +1,3 @@
+config/dns/resolv.conf.example
+config/samba/smb.conf.example
+config/apache/glpi.conf.example
