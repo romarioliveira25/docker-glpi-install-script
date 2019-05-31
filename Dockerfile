@@ -21,6 +21,8 @@ RUN apk update && apk --no-cache add php7 \
         php7-simplexml \
         php7-xml \
         php7-apache2 \
+        php7-exif \
+        php7-iconv \
     ######################################
     ##  PHP 7.2 | Optional extensions   ##
     ######################################
@@ -55,7 +57,8 @@ RUN apk update && apk --no-cache add php7 \
     ######################################
         util-linux \
         curl \
-        jq
+        jq \
+        composer
 
 WORKDIR ${WORKDIR_PATH}
 
