@@ -96,6 +96,12 @@ function part1() {
 	echo -e "STEP 4 - Removing compressed file ...\n"
 	rm -Rf ${WORKDIR_PATH}/${TAR_GLPI}
 
+  echo -e "EXTRA STEP - Add php CAS extesion with composer ...\n"
+  cd $FOLDER_GLPI
+  composer require apereo/phpcas:^1.3 --no-interaction --no-progress --optimize-autoloader
+  rm composer*
+  cd $WORKDIR_PATH
+
   if [ $GLPI_CLI_INSTALL ]; then
   
     echo -e "\nSTEP 5 - Runnging GLPI CLI install ...\n\n"
@@ -132,7 +138,7 @@ function part2() {
   fi
 
   mkdir -p /etc/glpi && \
-  mv -v ${FOLDER_GLPI}/files/* /var/lib/glpi && \
+  mv -vn ${FOLDER_GLPI}/files/* /var/lib/glpi && \
   mv -v ${FOLDER_GLPI}/config/* /etc/glpi
 
   echo -e "<?php\ndefine('GLPI_CONFIG_DIR', '/etc/glpi');\n\nif (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {\n\trequire_once GLPI_CONFIG_DIR . '/local_define.php';\n}" > glpi/inc/downstream.php
