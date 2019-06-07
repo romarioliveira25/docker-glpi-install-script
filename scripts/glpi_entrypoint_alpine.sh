@@ -238,7 +238,29 @@ function part6() {
   # Start cron service
   /usr/sbin/crond
 
-  echo -e "\n\nSTEP 12 - Starting apache service ...\n\n"
+  echo -e "\n\nSTEP 12 - Starting samba/winbind service ...\n\n"
+
+  # Samba/Winbind setup
+  # Start nmbd service
+  /usr/sbin/nmbd -D
+
+  # Join machine to domain
+  net ads join -U ${DOMAIN_USER}@${DOMAIN_NAME}%${DOMAIN_PASSWORD}
+
+  # Start smbd service
+  /usr/sbin/smbd -D
+
+  # Start winbindd service
+  /usr/sbin/winbindd -D
+
+  # Winbind permission fix
+  while [ ! -d "/var/lib/samba/winbindd_privileged/" ]; do 
+    echo -e "\nEsperando a pasta winbindd_privileged ser criada...\n\n"
+    sleep 1
+  done
+  chown root.apache /var/lib/samba/winbindd_privileged/
+
+  echo -e "\n\nSTEP 13 - Starting apache service ...\n\n"
 
   # Creating folders not created by related services
   if [ -d "/run/apache2" ]; then

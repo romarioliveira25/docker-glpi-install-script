@@ -45,6 +45,7 @@ RUN apk update && apk --no-cache add php7 \
     #####       Apache2 webserver     ####
     ######################################
         apache2 \
+        apache2-utils \
     ######################################
     #####       Apache2 NTLM AUTH     ####
     ######################################
@@ -62,12 +63,11 @@ RUN apk update && apk --no-cache add php7 \
 
 WORKDIR ${WORKDIR_PATH}
 
-ADD scripts/glpi_setup.sh .
+ADD scripts/glpi_entrypoint_alpine.sh .
 ADD config/php/ /etc/php7/conf.d
 ADD config/apache/ /etc/apache2/conf.d
 ADD config/samba/ /etc/samba
-ADD config/dns/ /etc/
 
-RUN chmod +x glpi_setup.sh
+RUN chmod +x glpi_entrypoint_alpine.sh
 
-ENTRYPOINT [ "./glpi_setup.sh" ]
+ENTRYPOINT [ "./glpi_entrypoint_alpine.sh" ]
