@@ -1,5 +1,4 @@
 .env
-config/dns/resolv.conf
 config/samba/smb.conf
 config/apache/glpi.conf
 docker-compose.yml
