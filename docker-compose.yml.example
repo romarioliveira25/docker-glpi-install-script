@@ -1,13 +1,17 @@
-version: '3.5'
+version: '3.6'
 
 services:
   glpi:
     build:
       context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
-    image: glpi-${GLPI_VERSION}_aplpine-3.8:1.0.0
+    image: 172.16.21.201:5000/pge/glpi-${GLPI_VERSION}_${OS_DIST}:1.0.0
     container_name: glpi-${GLPI_VERSION}
     ports:
-      - "7000:80"
-    hostname: srv-glpi
+      - "5011:80"
+    hostname: glpi-srv
+    dns:
+      - 0.0.0.0
+    restart: always
